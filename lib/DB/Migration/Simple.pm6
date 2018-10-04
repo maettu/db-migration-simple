@@ -58,7 +58,7 @@ class DB::Migration::Simple {
             # At the moment, I don't see how DBIish can execute
             # multiple statements at once. Doing a transaction manually
             # is hopefully fine. Please point out if that is wrong.
-            for %!cfg{$version}{$direction}.split(/\;/) -> $stmt {
+            for %!cfg{$version}{$direction}.split(/[\;\s*]+$$/) -> $stmt {
                 # Splitting at ; leaves us with the last $stmt empty
                 # Also, it makes us happily accept double semicolons: "CREATE.. ;; INSERT.. ;
                 next if $stmt ~~ /^\s*$/;

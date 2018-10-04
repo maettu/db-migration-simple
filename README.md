@@ -36,17 +36,31 @@ Empty lines are ignored.
 
 Lines starting with "-- x up" denote the next version. Versions are integers.
 Comments are also allowed at the end of lines starting with "--":
-    -- 31 # Version 31 has a comment
+
+`-- 31 # Version 31 has a comment`
 
 The other lines are SQL that get sent to your database.
-Comments in the SQL lines are only supported using the `/* comment */` style.
-(No `-- ignore-until-end-of-line` style comments, e.g. for SQLite.)
+Don't use SQL comments after a semicolon. In fact. the semicolon has to be
+the last non-whitespace character on a line.
+
+NOK: `CREATE ...; INSERT ...;`
+
+NOK: `CREATE ...(...); # comment`
+
+NOK: `CREATE ...; /* comment */`
+
+Separate SQL statements with semicolons.
 
 Example
 -------
 
     -- 1 up # comment
-    CREATE TABLE table_version_1(id INTEGER PRIMARY KEY AUTOINCREMENT, msg TEXT);
+    CREATE TABLE table_version_1( /* comment */
+        # comment
+        /* or, SQL style comment */
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        msg TEXT
+    );
     INSERT INTO table_version_1 (msg) VALUES("This is version 1");
 
     # comment
