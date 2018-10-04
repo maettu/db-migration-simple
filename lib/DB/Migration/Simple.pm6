@@ -2,10 +2,10 @@ use v6;
 
 class DB::Migration::Simple {
     has $.verbose = False;
-    has $.dbh;
-    has $.migration-file;
+    has $.dbh is required;
+    has $.migration-file is required;
     has $.migration-table-name = 'db-migrations-simple-meta';
-    has %.cfg;
+    has %!cfg = self!read-config();
 
     method current-version() {
         try {
@@ -27,8 +27,6 @@ class DB::Migration::Simple {
     method migrate(:$version = 'latest') {
         my Int $current-version = self.current-version();
 
-        # TODO put this into constructor
-        %!cfg = self!read-config();
         self!debug(%!cfg);
 
         my $v = $version;
