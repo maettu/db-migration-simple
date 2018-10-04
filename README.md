@@ -12,12 +12,12 @@ SYNOPSIS
 
     my $dbh = DBIish.connect('SQLite', :database<example-db.sqlite3>);
     my $m = DB::Migration::Simple.new(:$dbh :migration-file<etc/migrations>);
-    # optional parameter: $verbose
-    # optional parameter: $migration-table-name
+    # optional parameter: :$verbose
+    # optional parameter: :$migration-table-name
 
-    $m.current-version();
+    say $m.current-version();
 
-    $m.migrate(version => 42);
+    $m.migrate(version<42>, :verbose); # go to version 42 and be informative
     $m.migrate(); # migrate to latest version
 
 DESCRIPTION
@@ -26,16 +26,19 @@ DESCRIPTION
 DB::Migration::Simple is a Perl 6 module to help with up- and downgrading
 a database schema between versions.
 
-Write an SQL-file that specifies actions for up and migrations.
+Write an SQL-file that specifies actions for up and down migrations.
 
 DB::Migration::Simple does not depend on certain databases or versions thereof.
 It takes a dabatabase handle and trusts that the SQL you write will work with that handle.
 
-Everything after a # is a comment.
+Lines starting with an # are comments
 Empty lines are ignored.
-Only one statement per line.
 
 Lines starting with "-- x up" denote the next version. Versions are integers.
+Comments are also allowed at the end of lines starting with "--":
+    -- 31 # Version 31 has a comment
+
+The other lines are SQL that get sent to your database.
 
 Example
 -------
@@ -78,7 +81,7 @@ Verbose Mode
 ------------
 For debugging or other reasons of interest, supply the :verbose flag
 
-    my $m = DB::Migration::Simple.new(:$dbh, :verbose<True>);
+    my $m = DB::Migration::Simple.new(:$dbh, :verbose);
 
 Metadata
 --------
