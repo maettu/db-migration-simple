@@ -15,6 +15,7 @@ class DB::Migration::Simple {
             END-STATEMENT
             $sth.execute();
             my @rows = $sth.allrows();
+            $sth.finish();
             self!debug("current-version: allrows: "~@rows.gist);
             return @rows[0][0];
         }
@@ -64,8 +65,12 @@ class DB::Migration::Simple {
                 }
             }
         }
+        $!dbh.do(qq:to/END-STATEMENT/);
+            UPDATE '$!migration-table-name'
+                SET value = '$target-version'
+                WHERE key = 'current-version'
+        END-STATEMENT
         $!dbh.do('COMMIT');
-        $!dbh.do("UPDATE '$!migration-table-name' SET value = '$target-version' WHERE key = 'current-version'");
         return $target-version;
     }
 
