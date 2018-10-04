@@ -82,9 +82,9 @@ class DB::Migration::Simple {
 
     method !read-config() {
         my %cfg;
-        my $version;
-        my $direction;
         for $!migration-file.IO.slurp().split(/\n/) -> $line is copy {
+            state ($version, $direction);
+
             # get rid of comments and empty lines
             next if $line ~~ /^\s*$/;
             next if $line ~~ /^\s*\#/;
@@ -96,13 +96,13 @@ class DB::Migration::Simple {
                 $version = $0;
                 $direction = $1;
                 self!debug("version: $version, direction: $direction");
-                next;
             }
-
-            # We merge the lines and split SQL statements on the semicolons.
-            # This allows for multi line statements which make our migrations
-            # file more readable. E.g long CREATE TABLE statements.
-            %cfg{$version}{$direction} ~= $line;
+            else {
+                # We merge the lines and split SQL statements on the semicolons.
+                # This allows for multi line statements which make our migrations
+                # file more readable. E.g long CREATE TABLE statements.
+                %cfg{$version}{$direction} ~= $line ~"\n";
+            }
         }
         return %cfg;
     }
