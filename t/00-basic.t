@@ -35,6 +35,7 @@ ok $m.migrate(:version<0>) eq '0', 'going back to version 0';
 check-table-gone(2);
 check-table-gone(1);
 
+done-testing;
 
 sub select($stmt) {
     my $sth = $dbh.prepare($stmt);
