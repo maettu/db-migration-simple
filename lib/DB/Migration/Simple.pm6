@@ -100,7 +100,7 @@ class DB::Migration::Simple {
     }
 
     method !debug($msg) {
-        say $msg if $!verbose;
+        note $msg if $!verbose;
     }
 
     method !init-meta-table() {
