@@ -25,15 +25,14 @@ class DB::Migration::Simple {
         return 0;
     }
 
-    method migrate(:$version = 'latest') {
+    method migrate(:$version is copy = 'latest') {
         my Int $current-version = self.current-version();
 
         self!debug(%!cfg);
 
-        my $v = $version;
-        $v = %!cfg.keys.sort.reverse[0] if $v eq 'latest';
+        $version = %!cfg.keys.sort.reverse[0] if $version eq 'latest';
 
-        my Int $target-version = $v.Int;
+        my Int $target-version = $version.Int;
         self!debug("migrating from version '$current-version' to version '$target-version'");
         if $current-version == $target-version {
             self!debug("DB already at version $version");
