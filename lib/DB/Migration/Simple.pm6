@@ -78,8 +78,8 @@ class DB::Migration::Simple {
         for $!migration-file.IO.slurp().split(/\n/) -> $l {
             # get rid of comments and empty lines
             my $line = $l;
-            $line ~~ s/\#.*$//;
             next if $line ~~ /^\s*$/;
+            next if $line ~~ /^\s*\#/;
 
             self!debug("line: $line");
 
