@@ -30,8 +30,7 @@ class DB::Migration::Simple {
 
         self!debug(%!cfg);
 
-        $version = %!cfg.keys.sort.reverse[0] if $version eq 'latest';
-
+        $version = %!cfg.keys.max(*.Int) if $version eq 'latest';
         my Int $target-version = $version.Int;
         self!debug("migrating from version '$current-version' to version '$target-version'");
         if $current-version == $target-version {
@@ -43,16 +42,15 @@ class DB::Migration::Simple {
         self!debug("$!verbose migrating '$direction' from version '$current-version' to version '$target-version'");
 
         $!dbh.do('BEGIN TRANSACTION');
-        # TODO unelegant
-        my $up = 0;
-        my $down = 0;
-        $up = 1 if $direction eq 'up';
-        $down = 1 if $direction eq 'down';
-        for ($current-version+$up ... $target-version+$down) -> $version {
+
+        my @versions = $direction eq 'up'
+            ?? ($current-version + 1 ... $target-version)
+            !! ($current-version ... $target-version + 1);
+
+        for @versions -> $version {
             self!debug("doing '$direction' migrations for $version");
 
-            # TODO this seems unelegant
-            next if %!cfg{$version}{$direction}.^name eq 'Any';
+            next without %!cfg{$version}{$direction};
 
             # At the moment, I don't see how DBIish can execute
             # multiple statements at once. Doing a transaction manually
