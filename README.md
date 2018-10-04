@@ -39,33 +39,35 @@ Comments are also allowed at the end of lines starting with "--":
     -- 31 # Version 31 has a comment
 
 The other lines are SQL that get sent to your database.
+Comments in the SQL lines are only supported using the `/* comment */` style.
+(No `-- ignore-until-end-of-line` style comments, e.g. for SQLite.)
 
 Example
 -------
 
     -- 1 up # comment
-    CREATE TABLE table_version_1(id INTEGER PRIMARY KEY AUTOINCREMENT, msg TEXT)
-    INSERT INTO table_version_1 (msg) VALUES("This is version 1")
+    CREATE TABLE table_version_1(id INTEGER PRIMARY KEY AUTOINCREMENT, msg TEXT);
+    INSERT INTO table_version_1 (msg) VALUES("This is version 1");
 
     # comment
 
     --1 down
-    DROP TABLE table_version_1
+    DROP TABLE table_version_1;
 
 
     -- 2 up
-    CREATE TABLE table_version_2 (msg TEXT)
-    INSERT INTO table_version_2 VALUES ("This is version 2")
+    CREATE TABLE table_version_2 (msg TEXT);
+    INSERT INTO table_version_2 VALUES ("This is version 2");
 
     -- 2 down
-    DROP TABLE table_version_2
+    DROP TABLE table_version_2;
 
 
     -- 3 up
-    CREATE TABLE table_version_3 (msg TEXT)
+    CREATE TABLE table_version_3 (msg TEXT);
 
     -- 3 down
-    DROP TABLE table_version_3
+    DROP TABLE table_version_3;
 
 
 Migrating up from version 0 (empty database) to version 2 will do the following.

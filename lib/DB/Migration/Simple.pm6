@@ -55,7 +55,13 @@ class DB::Migration::Simple {
             # TODO this seems unelegant
             next if %!cfg{$version}{$direction}.^name eq 'Any';
 
-            for |%!cfg{$version}{$direction} -> $stmt {
+            # At the moment, I don't see how DBIish can execute
+            # multiple statements at once. Doing a transaction manually
+            # is hopefully fine. Please point out if that is wrong.
+            for %!cfg{$version}{$direction}.split(/\;/) -> $stmt {
+                # Splitting at ; leaves us with the last $stmt empty
+                # Also, it makes us happily accept double semicolons: "CREATE.. ;; INSERT.. ;
+                next if $stmt ~~ /^\s*$/;
                 self!debug("executing $stmt");
                 try $!dbh.do($stmt);
                 if $! {
@@ -78,9 +84,8 @@ class DB::Migration::Simple {
         my %cfg;
         my $version;
         my $direction;
-        for $!migration-file.IO.slurp().split(/\n/) -> $l {
+        for $!migration-file.IO.slurp().split(/\n/) -> $line is copy {
             # get rid of comments and empty lines
-            my $line = $l;
             next if $line ~~ /^\s*$/;
             next if $line ~~ /^\s*\#/;
 
@@ -94,7 +99,10 @@ class DB::Migration::Simple {
                 next;
             }
 
-            %cfg{$version}{$direction}.push($line);
+            # We merge the lines and split SQL statements on the semicolons.
+            # This allows for multi line statements which make our migrations
+            # file more readable. E.g long CREATE TABLE statements.
+            %cfg{$version}{$direction} ~= $line;
         }
         return %cfg;
     }
