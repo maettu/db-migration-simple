@@ -64,7 +64,7 @@ class DB::Migration::Simple {
                 if $! {
                     $!dbh.do('ROLLBACK');
                     self!debug("error: $!");
-                    return False;
+                    fail $!;
                 }
             }
         }
