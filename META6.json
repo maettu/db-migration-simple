@@ -15,5 +15,5 @@
     "support" : {
         "source" : "https://github.com/maettu/db-migration-simple.git"
     },
-    "version" : "0.1"
+    "version" : "1.0"
 }
