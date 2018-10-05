@@ -40,8 +40,19 @@ Comments are also allowed at the end of lines starting with "--":
 `-- 31 # Version 31 has a comment`
 
 The other lines are SQL that get sent to your database.
-Don't use SQL comments after a semicolon. In fact. the semicolon has to be
+Separate SQL statements with semicolons.
+
+Don't use SQL comments after a semicolon.
+Only one SQL statement per line.
+In fact, the semicolon has to be
 the last non-whitespace character on a line.
+
+(That is because we don't parse the SQL but just split at the semicolons
+and anchor the semicolon at the end of a line to avoid splitting inside SQL.
+Example: `SELECT .. FROM .. WHERE foo = ";"`.
+
+The splitting in turn is done before sending the statements to the DB because
+it looks like DBIish only supports one statement at a time. Might be wrong.)
 
 NOK: `CREATE ...; INSERT ...;`
 
@@ -49,7 +60,6 @@ NOK: `CREATE ...(...); # comment`
 
 NOK: `CREATE ...; /* comment */`
 
-Separate SQL statements with semicolons.
 
 Example
 -------
