@@ -16,3 +16,5 @@ Session.vim
 *~
 # Vim auto-generated tag files
 tags
+# The test DB
+t/test-db.sqlite3
