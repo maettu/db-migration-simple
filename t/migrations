@@ -2,9 +2,9 @@
 CREATE TABLE table_version_1( /* comment */
     # comment
     /* or, SQL style comment */
-    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     msg TEXT
-); ; 
+); ;
 INSERT INTO table_version_1 (msg) VALUES("This is version 1");
 
 # comment
