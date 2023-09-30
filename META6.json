@@ -1,6 +1,7 @@
 {
     "name" : "DB::Migration::Simple",
     "description" : "Simple DB Migration. Go up and down in versions.",
+    "auth" : "zef:andinus",
     "perl" : "6.c",
     "license" : "Artistic-2.0",
     "meta-version" : "0",
@@ -9,11 +10,14 @@
         "Matthias Bloch <matthias.bloch@puffin.ch>"
     ],
     "provides" : {
-        "DB::Migration::Simple" : "lib/DB/Migration/Simple.pm6"
+        "DB::Migration::Simple" : "lib/DB/Migration/Simple.rakumod"
     },
+    "test-depends" : [
+        "DBIish"
+    ],
     "source-url" : "https://github.com/maettu/db-migration-simple.git",
     "support" : {
         "source" : "https://github.com/maettu/db-migration-simple.git"
     },
-    "version" : "1.0"
+    "version" : "1.1"
 }
